@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Ne clique pas</title>
+<style>
+body { margin:0; font-family:'Poppins',sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; transition: background 1s; overflow: hidden;}
+.screen { text-align:center; max-width:600px; padding:20px; }
+.hidden { display:none; }
+.red { background:#b30000; color:white; }
+.black { background:#000; color:white; }
+.soft { background:#fde2e4; color:#222; }
+button { padding:12px 25px; margin:10px; border:none; border-radius:30px; font-size:16px; cursor:pointer; position: relative;}
+.btn-red { background:white; color:#b30000; }
+.btn-dark { background:#222; color:white; }
+.panther { font-size:80px; margin-bottom:20px; }
+
+.kiss {
+  position:fixed;
+  font-size:24px;
+  animation: fly 4s linear forwards;
+}
+@keyframes fly {
+  to {
+    transform: translate(var(--x, 0), var(--y, -110vh));
+    opacity:0;
+  }
+}
+</style>
+</head>
+<body class="red">
+
+<!-- ACTE 1 -->
+<div id="act1" class="screen">
+  <div class="panther">🐆</div>
+  <p>⚠️ Attention<br>Ce bouton n’est pas destiné à tout le monde.</p>
+  <button class="btn-red" onclick="moveButton(this)">NE PAS CLIQUER</button>
+  <button class="btn-red" onclick="goReveal()">CLIQUER</button>
+</div>
+
+<!-- ACTE 2 : avertissement -->
+<div id="warning" class="screen hidden">
+  <p><strong>Dernier avertissement.</strong><br>Reculer est encore possible.</p>
+  <button class="btn-dark" onclick="goBlack()">Continuer</button>
+</div>
+
+<!-- ACTE 2 bis : fond noir -->
+<div id="black" class="screen hidden">
+  <p>Tu savais déjà que tu allais continuer.</p>
+</div>
+
+<!-- ACTE 3 : Révélation -->
+<div id="reveal" class="screen hidden">
+  <div class="panther">🐆</div>
+  <h2>Trop tard.</h2>
+  <p>Tu es officiellement<br><strong>mon Valentin 💖</strong></p>
+  <button onclick="goMessage()">Continuer</button>
+</div>
+
+<!-- ACTE 4 : Message personnel -->
+<div id="message" class="screen hidden">
+  <h2>Parce que c’est toi, gros nounours.</h2>
+  <p>Il n’y a pas que la Saint-Valentin que j’ai prise au sérieux.<br><br>
+  Je sais que je vais la célébrer avec toi.<br><br>
+  Alors prends soin de toi,<br>pour moi.</p>
+  <button onclick="goEnd()">💋</button>
+</div>
+
+<!-- ACTE 5 : Fin -->
+<div id="end" class="screen hidden">
+  <h2>Gros bisous, Betu</h2>
+</div>
+
+<script>
+// 🖤 Gestion des écrans
+function hideAll() { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); }
+function goWarning() { hideAll(); document.getElementById('warning').classList.remove('hidden'); }
+function goBlack() { hideAll(); document.body.className='black'; document.getElementById('black').classList.remove('hidden'); setTimeout(goReveal,2000);}
+function goReveal() { hideAll(); document.body.className='soft'; document.getElementById('reveal').classList.remove('hidden'); }
+function goMessage() { hideAll(); document.getElementById('message').classList.remove('hidden'); }
+
+// 🐆 Bouton final
+function goEnd() {
+  hideAll();
+  document.getElementById('end').classList.remove('hidden');
+
+  // 💋 Bisous qui volent partout
+  for(let i=0;i<30;i++){
+    let kiss = document.createElement('div');
+    kiss.className='kiss';
+    kiss.innerText='💋';
+    kiss.style.left = Math.random()*window.innerWidth + 'px';
+    kiss.style.top = Math.random()*window.innerHeight + 'px';
+    kiss.style.setProperty('--x', (Math.random()*200-100)+'px');
+    kiss.style.setProperty('--y', -(Math.random()*300+200)+'px');
+    document.body.appendChild(kiss);
+    setTimeout(()=>kiss.remove(),4000);
+  }
+}
+
+// 🏃 Bouton NE PAS CLIQUER qui fuit
+let moveIndex = 0;
+const moves = [
+  {left:-100, top:0},
+  {left:100, top:0},
+  {left:0, top:-100},
+  {left:0, top:-100},
+  {left:0, top:100},
+];
+
+function moveButton(btn){
+  const move = moves[moveIndex % moves.length];
+  moveIndex++;
+  btn.style.position='relative';
+  btn.style.left = move.left + 'px';
+  btn.style.top = move.top + 'px';
+}
+</script>
+
+</body>
+</html>
